@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 public interface BaseMapper <T> {
 
 	@Select("select * from ${tableName}")
-	List<T> findAll(@Param("tableName") String tableName);
+	List<T> findAll(@Param("classType") Class<?> T,@Param("tableName") String tableName);
 	
 	@Select("select * from ${tableName}")
 	Page<T> findAllByPage(@Param("tableName") String tableName);
 
 	@Select("select * from ${tableName} where id = #{id}")
-	T getOne(@Param("tableName") String tableName, @Param("id") Long id);
+	T getOne(@Param("classType") Class<?> T,@Param("tableName") String tableName, @Param("id") Long id);
 
 	@Insert("<script>"
 			+ "insert into ${tableName}"

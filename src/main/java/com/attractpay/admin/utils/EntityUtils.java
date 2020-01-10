@@ -72,17 +72,29 @@ public class EntityUtils {
 		return t;
 	}
 
-	public static String getTableName(Type genericSuperClass){
-	    ParameterizedType parametrizedType = null;
-	    while (parametrizedType == null) {
-	        if ((genericSuperClass instanceof ParameterizedType)) {
-	            parametrizedType = (ParameterizedType) genericSuperClass;
-	        } else {
-	            genericSuperClass = ((Class<?>) genericSuperClass).getGenericSuperclass();
-	        }
-	    }
+	public static Class<?> getEntityClass(Type genericSuperClass){
+		ParameterizedType parametrizedType = null;
+		while (parametrizedType == null) {
+			if ((genericSuperClass instanceof ParameterizedType)) {
+				parametrizedType = (ParameterizedType) genericSuperClass;
+			} else {
+				genericSuperClass = ((Class<?>) genericSuperClass).getGenericSuperclass();
+			}
+		}
 
-	    Class<?> entityClass = (Class<?>)parametrizedType.getActualTypeArguments()[0];
+		return (Class<?>)parametrizedType.getActualTypeArguments()[0];
+	}
+
+	public static String getTableName(Type genericSuperClass){
+//	    ParameterizedType parametrizedType = null;
+//	    while (parametrizedType == null) {
+//	        if ((genericSuperClass instanceof ParameterizedType)) {
+//	            parametrizedType = (ParameterizedType) genericSuperClass;
+//	        } else {
+//	            genericSuperClass = ((Class<?>) genericSuperClass).getGenericSuperclass();
+//	        }
+//	    }
+	    Class<?> entityClass = getEntityClass(genericSuperClass);
 	    for(Annotation annotation : entityClass.getAnnotations()){
 	    	if(annotation.annotationType().getName().equals("com.attractpay.admin.common.annotation.TableName")){
 	    		return ((TableName)annotation).value();
@@ -105,7 +117,9 @@ public class EntityUtils {
 				obj = cls.newInstance();
 				//利用反射，获取对象类信息中的所有属性
 				Field [] fields = cls.getDeclaredFields();
+
 				for(Field fd:fields){
+					if(fd.getName().equals("serialVersionUID")) continue;
 					//屏蔽权限
 					fd.setAccessible(true);
 					//为对象属性赋值
@@ -119,18 +133,6 @@ public class EntityUtils {
 		}
 		//返回集合
         return list;
-	}
-
-	/**
-	 * @description get entity class by class name
-	 * @author junji
-	 * @date 2020/1/9 18:10
-	 * @param className
-	 * @return
-	 */
-	public Object getClassByName(String className){
-
-		return new Merchant();
 	}
 
 }

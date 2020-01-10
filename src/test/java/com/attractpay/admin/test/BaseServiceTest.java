@@ -2,8 +2,13 @@ package com.attractpay.admin.test;
 
 
 import com.attractpay.admin.Application;
+import com.attractpay.admin.common.base.BaseService;
 import com.attractpay.admin.entity.Merchant;
+import com.attractpay.admin.entity.Store;
+import com.attractpay.admin.entity.User;
 import com.attractpay.admin.service.MerchantService;
+import com.attractpay.admin.service.StoreService;
+import com.attractpay.admin.service.UserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.junit.Test;
@@ -24,16 +29,16 @@ import static org.junit.Assert.assertTrue;
 public class BaseServiceTest {
 	
 	@Autowired
-	MerchantService merchantService;
+	StoreService storeService;
 
 	@Autowired
 	private RedisTemplate<String, Serializable> redisTemplate;
 
 	@Test
 	public void findAll() {
-		PageInfo<Merchant> pageable = new PageInfo<Merchant>();
+		PageInfo<Store> pageable = new PageInfo<Store>();
 		pageable.setPageSize(5);
-		Merchant result = merchantService.getOne(1);
+		Store result = storeService.getOne(1);
 		assertTrue(result!=null);
 	}
 

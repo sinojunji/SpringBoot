@@ -1,5 +1,6 @@
 package com.attractpay.admin.common.base;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,8 @@ public class BaseService<T> {
     BaseMapper<T> mapper;
 
     public List<T> findAll(){
-        return mapper.findAll(EntityUtils.getTableName(getClass().getGenericSuperclass()));
+        Type genericSuperclass = getClass().getGenericSuperclass();
+        return mapper.findAll(EntityUtils.getEntityClass(genericSuperclass),EntityUtils.getTableName(genericSuperclass));
     }
 
     public Page<T> findAllByPage(PageInfo<T> pageable){
@@ -33,7 +35,8 @@ public class BaseService<T> {
     }
 
     public T getOne(long id){
-        return mapper.getOne(EntityUtils.getTableName(getClass().getGenericSuperclass()),id);
+        Type genericSuperclass = getClass().getGenericSuperclass();
+        return mapper.getOne(EntityUtils.getEntityClass(genericSuperclass),EntityUtils.getTableName(genericSuperclass),id);
     }
 
     @Transactional

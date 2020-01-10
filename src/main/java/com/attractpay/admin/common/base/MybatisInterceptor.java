@@ -1,31 +1,18 @@
 package com.attractpay.admin.common.base;
 
-import com.attractpay.admin.entity.Merchant;
 import com.attractpay.admin.utils.EntityUtils;
-import com.attractpay.admin.utils.SpringUtil;
-import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
-import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
-import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.*;
 /**
@@ -51,16 +38,20 @@ public class MybatisInterceptor implements Interceptor {
 
         MetaObject metaObject = SystemMetaObject.forObject(realTarget(invocation.getTarget()));
         MappedStatement ms = (MappedStatement) metaObject.getValue("mappedStatement");
+        ParameterHandler paramHandler = (ParameterHandler)metaObject.getValue("parameterHandler");
+        Map<String,Object> paramsList = (Map<String,Object>) paramHandler.getParameterObject();
+        Class<?> T = null;
+        for (String key : paramsList.keySet()) {
+            if(key.equals("classType")) T = (Class<?>)paramsList.get(key);
+        }
 
         // 获取到当前的Statement
         Statement stmt =  (Statement) args[0];
         // 通过Statement获得当前结果集
         ResultSet resultSet = stmt.getResultSet();
 
-        Object merchant = SpringUtil.getBean("Merchant");
-        if(resultSet!=null && ms.getId().contains("BaseMapper") ) {
-            List<Merchant> merchants = EntityUtils.resultSetToList(resultSet, Merchant.class);
-            return merchants;
+        if(ms.getId().contains("BaseMapper")) {
+            return EntityUtils.resultSetToList(resultSet, T);
         }
         //如果没有进行拦截处理，则执行默认逻辑
         return invocation.proceed();
