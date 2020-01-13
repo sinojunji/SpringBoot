@@ -1,5 +1,6 @@
 package com.attractpay.admin.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.attractpay.admin.common.annotation.TableName;
@@ -10,7 +11,9 @@ import org.springframework.context.annotation.Bean;
 @Getter
 @Setter
 @TableName("t_merchant")
-public class Merchant {
+public class Merchant implements Serializable {
+
+	private static final long serialVersionUID = 8641408948091738849L;
 
 	private Long id;
 	

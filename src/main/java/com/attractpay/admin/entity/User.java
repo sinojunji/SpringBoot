@@ -1,5 +1,6 @@
 package com.attractpay.admin.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.attractpay.admin.common.annotation.TableName;
@@ -16,8 +17,9 @@ import lombok.Setter;
  */
 @TableName(value="t_user")
 @Data
-public class User {
+public class User implements Serializable {
 
+    private static final long serialVersionUID = 4027852766675375183L;
     /**
      *
      */

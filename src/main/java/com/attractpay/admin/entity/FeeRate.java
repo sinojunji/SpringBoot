@@ -12,9 +12,7 @@ import java.util.Date;
 @Setter
 public class FeeRate implements Serializable {
 
-
-	private static final long serialVersionUID = 8694424526592832464L;
-
+	private static final long serialVersionUID = -8696753149183987576L;
 
 	private Long id;
 	
